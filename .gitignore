@@ -1,0 +1,8 @@
+*.2o
+*.a
+*.o
+*.out
+*.sw[op]
+.lastmake*
+gmon.out
+localmake
