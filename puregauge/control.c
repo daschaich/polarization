@@ -30,27 +30,12 @@ int main(int argc, char *argv[]) {
     terminate(1);
   }
 
-  // Spill lattice in format expected by serial code
-  // (cf. read_in.cpp, loop_over_lattice and << overloading for Umatrix
-  for (t = 0; t < nt; t++) {
-    for (z = 0; z < nz; z++) {
-      for (y = 0; y < ny; y++) {
-        for (x = 0; x < nx; x++) {
-          s = node_index(x, y, z, t);
-          for (mu = 0; mu < NUMLINK; mu++) {
-            for (i = 0; i < NCOL; i++) {
-              for (j = 0; j < NCOL; j++) {
-                re = lattice[s].linkf[mu].e[i][j].real;
-                im = lattice[s].linkf[mu].e[i][j].imag;
-                printf("%g\t%g\t", re, im);
-              }
-            }
-            printf("\n");
-          }
-        }
-      }
-    }
+  // Compute field strength tensor at each site
+  make_field_strength(F_OFFSET(link), F_OFFSET(FS));
+  FORALLSITES(i, s) {
+    // TODO...
   }
+
   fflush(stdout);
   return 0;
 }

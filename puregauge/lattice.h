@@ -19,17 +19,8 @@ typedef struct {
   int index;          // Index in the array
 
   // No random numbers
-  su3_matrix link[4];
-  su3_matrix fieldstrength[6];
+  su3_matrix link[4], FS[6];    // Links and field strength tensor
 } site;
-
-// Defines for index on field_strength
-#define FS_XY 0
-#define FS_XZ 1
-#define FS_YZ 2
-#define FS_XT 3
-#define FS_YT 4
-#define FS_ZT 5
 // -----------------------------------------------------------------
 
 
@@ -49,9 +40,8 @@ EXTERN int volume;          // Volume of lattice
 EXTERN double g_ssplaq, g_stplaq;   // Global plaqs for I/O
 EXTERN double_complex linktrsum;
 EXTERN u_int32type nersc_checksum;
-EXTERN char startfile[MAXFILENAME], savefile[MAXFILENAME];
+EXTERN char startfile[MAXFILENAME];
 EXTERN int startflag;     // Beginning lattice: CONTINUE, RELOAD, FRESH
-EXTERN int saveflag;      // 1 if we will save the lattice;
 
 // Some of these global variables are node dependent
 // They are set in "make_lattice()"
@@ -66,8 +56,7 @@ EXTERN gauge_file *startlat_p;
 // No random numbers
 
 // Temporary matrices
-EXTERN su3_matrix *tempmat;
-
+EXTERN su3_matrix *tempmat, *tempmat2;
 
 // The lattice is a single global variable
 // (actually this is the part of the lattice on this node)

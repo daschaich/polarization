@@ -1,9 +1,8 @@
 // -----------------------------------------------------------------
-// General purpose IO-related routines for susy code
-// Loop over directions up to NUMLINK and do not reunitarize
+// General purpose IO-related routines for SU(N) polarization studies
 #include "generic_includes.h"
 #include "../include/io_lat.h"
-#include "../susy/susy_includes.h"    // For plaquette
+#include "../include/generic.h"    // For plaquette
 // -----------------------------------------------------------------
 
 
@@ -49,41 +48,41 @@ gauge_file *save_lattice(int flag, char *filename) {
 
 
 // -----------------------------------------------------------------
-// Set linkf to unit matrices
+// Set links to unit matrices
 void coldlat() {
   register int i, j, k, dir;
   register site *s;
 
-  for (dir = 0; dir < NUMLINK; dir++) {
-    FORALLSITES(i, s) {
+  FORALLSITES(i, s) {
+    for (dir = XUP; dir <= TUP; dir++){
       for (j = 0; j < NCOL; j++) {
         for (k = 0; k < NCOL; k++) {
           if (j != k)
-            s->linkf[dir].e[j][k] = cmplx(0.0, 0.0);
+            s->link[dir].e[j][k] = cmplx(0.0, 0.0);
           else
-            s->linkf[dir].e[j][k] = cmplx(1.0, 0.0);
+            s->link[dir].e[j][k] = cmplx(1.0, 0.0);
         }
       }
     }
   }
-  node0_printf("unit gauge NUMLINK configuration loaded\n");
+  node0_printf("unit gauge configuration loaded\n");
 }
 // -----------------------------------------------------------------
 
 
 
 // -----------------------------------------------------------------
-// Set linkf to funny matrices for debugging
+// Set link to funny matrices for debugging
 void funnylat() {
   register int i, j, k, dir;
   register site *s;
 
   FORALLSITES(i, s) {
     for (dir = XUP; dir <= TUP; dir++) {
-      s->linkf[dir].e[0][0] = cmplx((double)dir, (double)dir);
+      s->link[dir].e[0][0] = cmplx((double)dir, (double)dir);
       for (j = 1; j < NCOL; ++j) {
         for (k = 1; k < NCOL; ++k)
-          s->linkf[dir].e[j][k] = cmplx(10.0 * j * s->x, 10.0 * k * s->z);
+          s->link[dir].e[j][k] = cmplx(10.0 * j * s->x, 10.0 * k * s->z);
       }
     }
   }
@@ -94,10 +93,13 @@ void funnylat() {
 
 // -----------------------------------------------------------------
 // Reload a lattice in binary format, set to unit gauge or keep current
-// Do not reunitarize
 gauge_file *reload_lattice(int flag, char *filename) {
   double dtime;
   gauge_file *gf = NULL;
+  Real max_deviation;
+#if PRECISION == 2
+  Real max_deviation2;
+#endif
 
   dtime = -dclock();
   switch(flag) {
@@ -538,7 +540,7 @@ int get_prompt(FILE *fp, int *prompt) {
 
   *prompt = -1;
   printf("type 0 for no prompts or 1 for prompts\n");
-  while (1) {
+  while(1) {
     status = fscanf(fp, "%s", initial_prompt);
     if (status != 1) {
       printf("\n%s: Can't read input\n", myname);

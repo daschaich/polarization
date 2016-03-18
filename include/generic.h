@@ -1,8 +1,8 @@
 // -----------------------------------------------------------------
+// Macros and declarations for miscellaneous generic routines
 #ifndef _GENERIC_H
 #define _GENERIC_H
-// Macros and declarations for miscellaneous generic routines
-// This header is for codes that call generic routines
+
 // Other generic directory declarations are elsewhere:
 //   See comdefs.h for communications
 //   See io_lat.h for I/O
@@ -19,9 +19,12 @@
 
 
 // -----------------------------------------------------------------
-// gaugefix.c
-void gaugefix(int gauge_dir,Real relax_boost,int max_gauge_iter,
-              Real gfix_tol, field_offset diffmat, field_offset sumvec);
+// plaquette.c
+void plaquette(double *ss_plaq, double *st_plaq);
+
+// reunitarize.c
+void reunitarize();
+int reunit_su3(su3_matrix *c);
 
 // io_helpers.c
 gauge_file *save_lattice(int flag, char *filename);
@@ -63,16 +66,5 @@ int remap_stdio_from_args(int argc, char *argv[]);
 // ranstuff.c
 void initialize_prn(double_prn *prn_pt, int seed, int index);
 Real myrand(double_prn *prn_pt);
-
-// restrict_fourier.c
-// src is field to be transformed,
-// which must consist of size/sizeof(complex) consecutive complex numbers
-// space and space2 are working space, same size as src
-// space2 is needed only for non power of 2
-// Finally, isign is 1 for x --> k and -1 for k --> x
-void setup_restrict_fourier(int *key, int *slice);
-void restrict_fourier(field_offset src,
-                      field_offset space, field_offset space2,
-                      int size, int isign);
 #endif
 // -----------------------------------------------------------------

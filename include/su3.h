@@ -53,7 +53,7 @@ typedef struct {
 // Subroutine definitions
 // Matrix operations
 // In file trace_su3.c
-//complex trace_su3(su3_matrix *a);
+complex trace_su3(su3_matrix *a);
 
 // In file realtr.c
 Real realtrace_su3(su3_matrix *a, su3_matrix *b);
@@ -62,10 +62,10 @@ Real realtrace_su3(su3_matrix *a, su3_matrix *b);
 //complex complextrace_su3(su3_matrix *a, su3_matrix *b);
 
 // In file addmat.c
-//void add_su3_matrix(su3_matrix *a, su3_matrix *b, su3_matrix *c);
+void add_su3_matrix(su3_matrix *a, su3_matrix *b, su3_matrix *c);
 
 // In file submat.c
-//void sub_su3_matrix(su3_matrix *a, su3_matrix *b, su3_matrix *c);
+void sub_su3_matrix(su3_matrix *a, su3_matrix *b, su3_matrix *c);
 
 // In file s_m_mat.c
 //void scalar_mult_su3_matrix(su3_matrix *src, Real scalar, su3_matrix *dest);
@@ -91,7 +91,7 @@ Real realtrace_su3(su3_matrix *a, su3_matrix *b);
 //                              complex *scalar, su3_matrix *dest);
 
 // In file su3_adjoint.c
-//void su3_adjoint(su3_matrix *a, su3_matrix *b);
+void su3_adjoint(su3_matrix *a, su3_matrix *b);
 
 // In file clear_mat.c
 //void clear_su3mat(su3_matrix *dest);
@@ -106,7 +106,7 @@ Real realtrace_su3(su3_matrix *a, su3_matrix *b);
 void mult_su3_nn(su3_matrix *a, su3_matrix *b, su3_matrix *c);
 
 // In file m_mat_na.c
-//void mult_su3_na(su3_matrix *a, su3_matrix *b, su3_matrix *c);
+void mult_su3_na(su3_matrix *a, su3_matrix *b, su3_matrix *c);
 
 // In file m_mat_an.c
 void mult_su3_an(su3_matrix *a, su3_matrix *b, su3_matrix *c);

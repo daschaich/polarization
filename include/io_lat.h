@@ -108,8 +108,8 @@ int write_gauge_info_item( FILE *fpout, /* ascii file pointer */
                 must use s, d, f, or e */
            char *src,       /* address of starting data */
            int count,       /* number of data items if > 1 */
-           int stride);     /* byte stride of data if
-             count > 1 */
+           int stride);     /* byte stride of data if count > 1 */
+
 int sprint_gauge_info_item(
   char *string,    /* character string */
   size_t nstring,     /* string length */
@@ -120,8 +120,7 @@ int sprint_gauge_info_item(
           floating point data must be
           of type (Real) */
   int count,       /* number of data items if > 1 */
-  int stride);     /* byte stride of data if
-          count > 1 */
+  int stride);     /* byte stride of data if count > 1 */
 gauge_file *setup_output_gauge_file();
 gauge_file *setup_input_gauge_file(char *filename);
 // -----------------------------------------------------------------
@@ -160,8 +159,8 @@ int write_gauge_info_item( FILE *fpout,    /* ascii file pointer */
              floating point data must be
              of type (Real) */
            int count,       /* number of data items if > 1 */
-           int stride);      /* byte stride of data if
-                                           count > 1 */
+           int stride);      /* byte stride of data if count > 1 */
+
 int sprint_gauge_info_item(
   char *string,    /* character string */
   size_t nstring,     /* string length */
@@ -172,8 +171,8 @@ int sprint_gauge_info_item(
           floating point data must be
           of type (Real) */
   int count,       /* number of data items if > 1 */
-  int stride);      /* byte stride of data if
-          count > 1 */
+  int stride);      /* byte stride of data if count > 1 */
+
 void write_gauge_info_file(gauge_file *gf);
 gauge_file *setup_input_gauge_file(char *filename);
 gauge_file *setup_output_gauge_file();
@@ -185,18 +184,4 @@ gauge_file *r_serial_i(char *filename);
 void w_serial_f(gauge_file *gf);
 void r_serial_f(gauge_file *gf);
 void byterevn(int32type w[], int n);
-// -----------------------------------------------------------------
-
-
-
-// -----------------------------------------------------------------
-// IO for columns and diagonal elements of matrix Q
-// in pfaffian phase calculation
-#ifdef PHASE
-void loadQ(complex **Q, int ckpt_load);
-void saveQ(complex **Q, int ckpt_save);
-void load_diag(complex *diag, int ckpt_load);
-void save_diag(complex *diag, int ckpt_save);
-#endif
-#endif
 // -----------------------------------------------------------------

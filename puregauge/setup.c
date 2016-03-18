@@ -51,6 +51,18 @@ int initial_set() {
 // -----------------------------------------------------------------
 
 
+// -----------------------------------------------------------------
+// Allocate space for fields
+void make_fields() {
+  double size = (double)(2.0 * sizeof(su3_matrix);
+  FIELD_ALLOC(tempmat, su3_matrix);
+  FIELD_ALLOC(tempmat2, su3_matrix);
+
+  size *= sites_on_node;
+  node0_printf("Mallocing %.1f MBytes per core for fields\n", size / 1e6);
+}
+// -----------------------------------------------------------------
+
 
 
 // -----------------------------------------------------------------
@@ -65,8 +77,9 @@ int setup() {
   make_lattice();
   // Set up neighbor pointers and comlink structures
   make_nn_gathers();
-  // Allocate space for temporary su3_matrix field
-  FIELD_ALLOC(tempmat1, su3_matrix);
+  // Allocate space for fields
+  make_fields();
+  // Allocate temporary fields
 
   return prompt;
 }
