@@ -32,7 +32,7 @@
 
 
 // -----------------------------------------------------------------
-// field offset and field pointer
+// field_offset and field pointer
 // Used when fields in the site are arguments to subroutines
 // Usage: fo = F_OFFSET(field)
 //   where "field" is the name of a field in the site struct
