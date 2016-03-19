@@ -1,6 +1,6 @@
 Pure-gauge polarization, Nc = 3
 Machine = Scalar processor, with 1 nodes
-start: Fri Mar 18 20:35:50 2016
+start: Fri Mar 18 21:11:18 2016
 
 type 0 for no prompts or 1 for prompts
 nx 4
@@ -19,8 +19,8 @@ reload_serial config.4444
 Restored binary gauge configuration serially from file config.4444
 Time stamp Wed Dec 31 14:07:26 1997
 Checksums 38abcb08 70225d93 OK
-Time to reload gauge configuration = 3.190041e-04
+Time to reload gauge configuration = 0.0001881 seconds
 CHECK PLAQ: 1.9094453251406434e+00 1.8984215492349603e+00
 CHECK NERSC LINKTR: 8.8721354045749956e-01 CKSUM: 0
-Reunitarized for double precision. Max deviation 1.42e-06 changed to 4.44e-16
-Time to check unitarity = 3.311634e-04
+Reunitarized for double precision.  Max deviation 1.4e-06 changed to 4.4e-16
+Time to check unitarity = 0.0001919 seconds

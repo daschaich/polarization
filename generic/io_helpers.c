@@ -30,7 +30,7 @@ gauge_file *save_lattice(int flag, char *filename) {
   }
   dtime += dclock();
   if (flag != FORGET)
-    node0_printf("Time to save = %e\n", dtime);
+    node0_printf("Time to save = %.4g seconds\n", dtime);
 #if PRECISION == 1
   node0_printf("CHECK PLAQ: %e %e\n", g_ssplaq, g_stplaq);
   node0_printf("CHECK NERSC LINKTR: %e CKSUM: %x\n",
@@ -119,7 +119,7 @@ gauge_file *reload_lattice(int flag, char *filename) {
   }
   dtime += dclock();
   if (flag != FRESH && flag != CONTINUE)
-    node0_printf("Time to reload gauge configuration = %e\n", dtime);
+    node0_printf("Time to reload gauge configuration = %.4g seconds\n", dtime);
 
   plaquette(&g_ssplaq, &g_stplaq);
   d_linktrsum(&linktrsum);
@@ -129,7 +129,7 @@ gauge_file *reload_lattice(int flag, char *filename) {
   node0_printf("CHECK PLAQ: %e %e\n", g_ssplaq, g_stplaq);
   node0_printf("CHECK NERSC LINKTR: %e CKSUM: %x\n",
                linktrsum.real / (Real)NCOL, nersc_checksum);
-#else             // Double precision
+#else     // Double precision
   node0_printf("CHECK PLAQ: %.16e %.16e\n", g_ssplaq, g_stplaq);
   node0_printf("CHECK NERSC LINKTR: %.16e CKSUM: %x\n",
                linktrsum.real / (Real)NCOL, nersc_checksum);
@@ -143,7 +143,7 @@ gauge_file *reload_lattice(int flag, char *filename) {
 #else
   max_deviation = check_unitarity();
   g_floatmax(&max_deviation);
-#if (PRECISION==1)
+#if PRECISION == 1
   node0_printf("Unitarity checked.  Max deviation %.2g\n", max_deviation);
 #else
   reunitarize();
