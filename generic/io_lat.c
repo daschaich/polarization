@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------
 // Routines for susy gauge configuration input/output
-// Loop over mu = 0 to NUMLINK
+// Loop over mu = 0 to NDIMS
 // Works for most machines
 // Wrappers for I/O are in io_ansi.c
 
@@ -63,11 +63,11 @@
 
 
 // -----------------------------------------------------------------
-// Copy NUMLINK single precision fundamental matrices to generic precision
-void f2d_mat(fsu3_matrix_f *a, su3_matrix_f *b) {
+// Copy NDIMS single precision fundamental matrices to generic precision
+void f2d_mat(fsu3_matrix *a, su3_matrix *b) {
   int dir, i, j;
 
-  for (dir = 0; dir < NUMLINK; dir++) {
+  for (dir = 0; dir < NDIMS; dir++) {
     for (i = 0; i < NCOL; i++) {
       for (j = 0; j < NCOL; j++)
         set_complex_equal(&(a[dir].e[i][j]), &(b[dir].e[i][j]));
@@ -75,11 +75,11 @@ void f2d_mat(fsu3_matrix_f *a, su3_matrix_f *b) {
   }
 }
 
-// Copy NUMLINK generic precision fundamental matrices to single precision
-void d2f_mat(su3_matrix_f *a, fsu3_matrix_f *b) {
+// Copy NDIMS generic precision fundamental matrices to single precision
+void d2f_mat(su3_matrix *a, fsu3_matrix *b) {
   int dir, i, j;
 
-  for (dir = 0; dir < NUMLINK; dir++) {
+  for (dir = 0; dir < NDIMS; dir++) {
     for (i = 0; i < NCOL; i++) {
       for (j = 0; j < NCOL; j++)
         set_complex_equal(&(a[dir].e[i][j]), &(b[dir].e[i][j]));
@@ -134,7 +134,7 @@ gauge_file *w_serial_i(char *filename) {
 
 // -----------------------------------------------------------------
 // Flush lbuf to output, resetting buf_length is reset
-static void flush_lbuf_to_file(gauge_file *gf, fsu3_matrix_f *lbuf,
+static void flush_lbuf_to_file(gauge_file *gf, fsu3_matrix *lbuf,
                                int *buf_length) {
 
   FILE *fp = gf->fp;
@@ -143,7 +143,7 @@ static void flush_lbuf_to_file(gauge_file *gf, fsu3_matrix_f *lbuf,
   if (*buf_length <= 0)
     return;
 
-  stat = (int)fwrite(lbuf, NUMLINK * sizeof(fsu3_matrix_f), *buf_length, fp);
+  stat = (int)fwrite(lbuf, NDIMS * sizeof(fsu3_matrix), *buf_length, fp);
   if (stat != *buf_length) {
     printf("w_serial: node%d gauge configuration write error %d file %s\n",
            this_node, errno, gf->filename);
@@ -182,35 +182,35 @@ static void accum_cksums(gauge_file *gf, int *rank29, int *rank31,
 // -----------------------------------------------------------------
 // Flush tbuf to lbuf and accumulate checksums without resetting tbuf_length
 static void flush_tbuf_to_lbuf(gauge_file *gf, int *rank29, int *rank31,
-             fsu3_matrix_f *lbuf, int *buf_length,
-             fsu3_matrix_f *tbuf, int tbuf_length) {
+             fsu3_matrix *lbuf, int *buf_length,
+             fsu3_matrix *tbuf, int tbuf_length) {
 
   int nword;
   u_int32type *buf;
 
   if (tbuf_length > 0) {
-    memcpy((void *)&lbuf[NUMLINK * (*buf_length)],
-           (void *)tbuf, NUMLINK * tbuf_length * sizeof(fsu3_matrix_f));
+    memcpy((void *)&lbuf[NDIMS * (*buf_length)],
+           (void *)tbuf, NDIMS * tbuf_length * sizeof(fsu3_matrix));
 
-    nword = NUMLINK * (int)sizeof(fsu3_matrix_f)
+    nword = NDIMS * (int)sizeof(fsu3_matrix)
                     / (int)sizeof(int32type) * tbuf_length;
-    buf = (u_int32type *)&lbuf[NUMLINK * (*buf_length)];
+    buf = (u_int32type *)&lbuf[NDIMS * (*buf_length)];
     accum_cksums(gf, rank29, rank31, buf, nword);
 
     *buf_length += tbuf_length;
   }
 }
 
-static void send_buf_to_node0(fsu3_matrix_f *tbuf, int tbuf_length,
+static void send_buf_to_node0(fsu3_matrix *tbuf, int tbuf_length,
                               int currentnode) {
 
   if (this_node == currentnode) {
     send_field((char *)tbuf,
-               NUMLINK * tbuf_length * sizeof(fsu3_matrix_f), 0);
+               NDIMS * tbuf_length * sizeof(fsu3_matrix), 0);
   }
   else if (this_node == 0) {
     get_field((char *)tbuf,
-              NUMLINK * tbuf_length * sizeof(fsu3_matrix_f), currentnode);
+              NDIMS * tbuf_length * sizeof(fsu3_matrix), currentnode);
   }
 }
 // -----------------------------------------------------------------
@@ -225,8 +225,8 @@ void w_serial(gauge_file *gf) {
   int x, y, z, t, currentnode, newnode;
   FILE *fp = NULL;
   gauge_header *gh = NULL;
-  fsu3_matrix_f *lbuf = NULL;
-  fsu3_matrix_f *tbuf = malloc(nx * NUMLINK * sizeof(*tbuf));
+  fsu3_matrix *lbuf = NULL;
+  fsu3_matrix *tbuf = malloc(nx * NDIMS * sizeof(*tbuf));
   off_t offset;               // File stream pointer
   off_t coord_list_size;      // Size of coordinate list in bytes
   off_t head_size;            // Size of header plus coordinate list
@@ -243,7 +243,7 @@ void w_serial(gauge_file *gf) {
 
   // Only allocate lbuf on node0
   if (this_node == 0) {
-    lbuf = malloc(MAX_BUF_LENGTH * NUMLINK * sizeof(*lbuf));
+    lbuf = malloc(MAX_BUF_LENGTH * NDIMS * sizeof(*lbuf));
     if (lbuf == NULL) {
       printf("w_serial: node0 can't malloc lbuf\n");
       fflush(stdout);
@@ -278,9 +278,9 @@ void w_serial(gauge_file *gf) {
   gf->check.sum29 = 0;
   // Count 32-bit words mod 29 and mod 31 in order of appearance on file
   // Here only node 0 uses these values -- both start at 0
-  rank29 = NUMLINK * sizeof(fsu3_matrix_f)
+  rank29 = NDIMS * sizeof(fsu3_matrix)
                    / sizeof(int32type) * sites_on_node * this_node % 29;
-  rank31 = NUMLINK * sizeof(fsu3_matrix_f)
+  rank31 = NDIMS * sizeof(fsu3_matrix)
                    / sizeof(int32type) * sites_on_node * this_node % 31;
 
   g_sync();
@@ -313,9 +313,9 @@ void w_serial(gauge_file *gf) {
             // node0 sends a few bytes to newnode as a clear to send signal
             if (newnode != currentnode) {
               if (this_node == 0 && newnode != 0)
-                send_field((char *)tbuf, NUMLINK, newnode);
+                send_field((char *)tbuf, NDIMS, newnode);
               if (this_node == newnode && newnode != 0)
-                get_field((char *)tbuf, NUMLINK, 0);
+                get_field((char *)tbuf, NDIMS, 0);
               currentnode = newnode;
             }
           }
@@ -323,7 +323,7 @@ void w_serial(gauge_file *gf) {
           // The node with the data just appends to its tbuf
           if (this_node == currentnode) {
             i = node_index(x, y, z, t);
-            d2f_mat(&lattice[i].linkf[0], &tbuf[NUMLINK * tbuf_length]);
+            d2f_mat(&lattice[i].link[0], &tbuf[NDIMS * tbuf_length]);
           }
 
           if (this_node == currentnode || this_node == 0)
@@ -389,8 +389,8 @@ void r_serial(gauge_file *gf) {
   gauge_check test_gc;
   u_int32type *val;
   int rank29, rank31;
-  fsu3_matrix_f *lbuf = NULL;   // Only allocate on node0
-  fsu3_matrix_f tmpsu3[NUMLINK];
+  fsu3_matrix *lbuf = NULL;   // Only allocate on node0
+  fsu3_matrix tmpsu3[NDIMS];
   int idest = 0;
   fp = gf->fp;
   gh = gf->header;
@@ -412,7 +412,7 @@ void r_serial(gauge_file *gf) {
     head_size = checksum_offset + gauge_check_size;
 
     // Allocate single precision read buffer
-    lbuf = malloc(MAX_BUF_LENGTH * NUMLINK * sizeof(fsu3_matrix_f));
+    lbuf = malloc(MAX_BUF_LENGTH * NDIMS * sizeof(fsu3_matrix));
     if (lbuf == NULL) {
       printf("r_serial: node%d can't malloc lbuf\n", this_node);
       fflush(stdout);
@@ -473,7 +473,7 @@ void r_serial(gauge_file *gf) {
           buf_length = MAX_BUF_LENGTH;
         /* then do read */
 
-        stat = (int)fread(lbuf, NUMLINK * sizeof(fsu3_matrix_f), buf_length, fp);
+        stat = (int)fread(lbuf, NDIMS * sizeof(fsu3_matrix), buf_length, fp);
         if (stat != buf_length) {
           printf("r_serial: node%d gauge configuration read error %d file %s\n",
                  this_node, errno, filename);
@@ -485,13 +485,13 @@ void r_serial(gauge_file *gf) {
 
       if (destnode == 0) {  // Just copy links
         idest = node_index(x, y, z, t);
-        // Save NUMLINK matrices in tmpsu3 for further processing
-        memcpy(tmpsu3, &lbuf[NUMLINK * where_in_buf],
-               NUMLINK * sizeof(fsu3_matrix_f));
+        // Save NDIMS matrices in tmpsu3 for further processing
+        memcpy(tmpsu3, &lbuf[NDIMS * where_in_buf],
+               NDIMS * sizeof(fsu3_matrix));
       }
       else {                // Send to correct node
-        send_field((char *)&lbuf[NUMLINK * where_in_buf],
-                   NUMLINK * sizeof(fsu3_matrix_f), destnode);
+        send_field((char *)&lbuf[NDIMS * where_in_buf],
+                   NDIMS * sizeof(fsu3_matrix), destnode);
       }
       where_in_buf++;
     }
@@ -500,8 +500,8 @@ void r_serial(gauge_file *gf) {
     else {  // All nodes other than node 0
       if (this_node == destnode) {
         idest = node_index(x, y, z, t);
-        // Receive NUMLINK matrices in temporary space for further processing
-        get_field((char *)tmpsu3, NUMLINK * sizeof(fsu3_matrix_f), 0);
+        // Receive NDIMS matrices in temporary space for further processing
+        get_field((char *)tmpsu3, NDIMS * sizeof(fsu3_matrix), 0);
       }
     }
 
@@ -511,10 +511,10 @@ void r_serial(gauge_file *gf) {
     if (this_node == destnode) {
       if (byterevflag == 1)
         byterevn((int32type *)tmpsu3,
-                 NUMLINK * sizeof(fsu3_matrix_f) / sizeof(int32type));
+                 NDIMS * sizeof(fsu3_matrix) / sizeof(int32type));
       // Accumulate checksums
       for (k = 0, val = (u_int32type *)tmpsu3;
-           k < NUMLINK * (int)sizeof(fsu3_matrix_f) / (int)sizeof(int32type);
+           k < NDIMS * (int)sizeof(fsu3_matrix) / (int)sizeof(int32type);
            k++, val++) {
         test_gc.sum29 ^= (*val)<<rank29 | (*val)>>(32 - rank29);
         test_gc.sum31 ^= (*val)<<rank31 | (*val)>>(32 - rank31);
@@ -525,12 +525,12 @@ void r_serial(gauge_file *gf) {
         if (rank31 >= 31)
           rank31 = 0;
       }
-      // Copy NUMLINK matrices to generic-precision lattice[idest]
-      f2d_mat(tmpsu3, &lattice[idest].linkf[0]);
+      // Copy matrices to generic-precision lattice[idest]
+      f2d_mat(tmpsu3, &lattice[idest].link[0]);
     }
     else {
-      rank29 += NUMLINK * sizeof(fsu3_matrix_f) / sizeof(int32type);
-      rank31 += NUMLINK * sizeof(fsu3_matrix_f) / sizeof(int32type);
+      rank29 += NDIMS * sizeof(fsu3_matrix) / sizeof(int32type);
+      rank31 += NDIMS * sizeof(fsu3_matrix) / sizeof(int32type);
       rank29 %= 29;
       rank31 %= 31;
     }

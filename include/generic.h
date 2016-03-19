@@ -22,9 +22,17 @@
 // plaquette.c
 void plaquette(double *ss_plaq, double *st_plaq);
 
+// check_unitarity.c
+Real check_unitarity();
+
 // reunitarize.c
 void reunitarize();
 int reunit_su3(su3_matrix *c);
+
+// field_strength.c
+// link_src is offset for su3_matrix link[4] in site struct
+// field_dest is offset for su3_matrix fieldstrength[6] in site struct
+void make_field_strength(field_offset link_src, field_offset field_dest);
 
 // io_helpers.c
 gauge_file *save_lattice(int flag, char *filename);

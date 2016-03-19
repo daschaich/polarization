@@ -5,7 +5,7 @@
 #include "../include/complex.h"
 #include "../include/su3.h"
 
-void add_su3_matrix_f(su3_matrix_f *a, su3_matrix_f *b, su3_matrix_f *c) {
+void add_su3_matrix(su3_matrix *a, su3_matrix *b, su3_matrix *c) {
   register int i, j;
   for (i = 0; i < NCOL; i++) {
     for (j = 0; j < NCOL; j++)

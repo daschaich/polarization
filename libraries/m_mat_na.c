@@ -6,7 +6,7 @@
 #include "../include/su3.h"
 
 #ifndef FAST
-void mult_su3_na_f(su3_matrix_f *a, su3_matrix_f *b, su3_matrix_f *c) {
+void mult_su3_na(su3_matrix *a, su3_matrix *b, su3_matrix *c) {
   register int i, j, k;
   register complex x, y;
   for (i = 0; i < NCOL; i++) {
@@ -22,7 +22,7 @@ void mult_su3_na_f(su3_matrix_f *a, su3_matrix_f *b, su3_matrix_f *c) {
   }
 }
 #else   // FAST version for NCOL=3 only
-void mult_su3_na(su3_matrix_f *a, su3_matrix_f *b, su3_matrix_f *c) {
+void mult_su3_na(su3_matrix *a, su3_matrix *b, su3_matrix *c) {
   int i,j;
   register Real t, ar, ai, br, bi, cr, ci;
   for (i = 0; i < 3; i++) {

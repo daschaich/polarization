@@ -1,0 +1,11 @@
+prompt 0
+nx 4
+ny 4
+nz 4
+nt 4
+
+epsilon 0.01
+tmax 0
+
+reload_serial config.4444
+forget

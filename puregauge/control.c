@@ -4,9 +4,10 @@
 #include "puregauge_includes.h"
 
 int main(int argc, char *argv[]) {
-  int prompt, s, x, y, z, t, mu, i, j;
-  Real re, im;
-  double dssplaq, dstplaq;
+  register int i;
+  register site *s;
+  int prompt;
+  double ss_plaq, st_plaq, td;
 
   // Setup
   setlinebuf(stdout); // DEBUG
@@ -29,6 +30,11 @@ int main(int argc, char *argv[]) {
     node0_printf("ERROR: run this thing in serial!\n");
     terminate(1);
   }
+
+  // Check plaquette
+  plaquette(&ss_plaq, &st_plaq);
+  td = 0.5 * (ss_plaq + st_plaq);
+  node0_printf("START %.8g %.8g %.8g ", ss_plaq, st_plaq, td);
 
   // Compute field strength tensor at each site
   make_field_strength(F_OFFSET(link), F_OFFSET(FS));

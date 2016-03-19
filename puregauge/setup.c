@@ -54,7 +54,7 @@ int initial_set() {
 // -----------------------------------------------------------------
 // Allocate space for fields
 void make_fields() {
-  double size = (double)(2.0 * sizeof(su3_matrix);
+  double size = (double)(2.0 * sizeof(su3_matrix));
   FIELD_ALLOC(tempmat, su3_matrix);
   FIELD_ALLOC(tempmat2, su3_matrix);
 
@@ -125,7 +125,7 @@ int readin(int prompt) {
     normal_exit(0);
 
   epsilon = par_buf.epsilon;
-  tmax    = par_buf.tmax;
+  tmax = par_buf.tmax;
 
   startflag = par_buf.startflag;
   strcpy(startfile, par_buf.startfile);

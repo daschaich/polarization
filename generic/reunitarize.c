@@ -53,7 +53,7 @@ double av_deviation;
 
 // -----------------------------------------------------------------
 static int check_deviation(Real deviation) {
-  if(max_deviation < deviation)
+  if (max_deviation < deviation)
     max_deviation = deviation;
 
   av_deviation += deviation * deviation;
@@ -195,10 +195,6 @@ void reunitarize() {
   int errcount = 0;
   int errors;
 
-#if (NCOL != 3)
-  #error "Reunitarization only implemented for NCOL=3!"
-#endif
-
   max_deviation = 0.0;
   av_deviation = 0.0;
 
@@ -207,9 +203,9 @@ void reunitarize() {
       mat = (su3_matrix *)&(s->link[dir]);
       errors = reunit_su3(mat);
       errcount += errors;
-      if(errors)
+      if (errors)
         reunit_report_problem_matrix(mat, i, dir);
-      if(errcount > MAXERRCOUNT) {
+      if (errcount > MAXERRCOUNT) {
         printf("Unitarity error count exceeded\n");
         terminate(1);
       }

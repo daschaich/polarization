@@ -136,6 +136,27 @@ gauge_file *reload_lattice(int flag, char *filename) {
 #endif
   fflush(stdout);
   dtime = -dclock();
+
+  // Unitarity checks can be turned off
+#ifdef NO_UNIT_CHECK
+  node0_printf("Skipping unitarity check since NCOL = %d\n", NCOL);
+#else
+  max_deviation = check_unitarity();
+  g_floatmax(&max_deviation);
+#if (PRECISION==1)
+  node0_printf("Unitarity checked.  Max deviation %.2g\n", max_deviation);
+#else
+  reunitarize();
+  max_deviation2 = check_unitarity();
+  g_floatmax(&max_deviation2);
+  node0_printf("Reunitarized for double precision.  ");
+  node0_printf("Max deviation %.2g changed to %.2g\n",
+               max_deviation, max_deviation2);
+#endif
+  fflush(stdout);
+  dtime += dclock();
+  node0_printf("Time to check unitarity = %.4g seconds\n", dtime);
+#endif
   return gf;
 }
 // -----------------------------------------------------------------
@@ -283,7 +304,7 @@ static int get_tag(FILE *fp, char *tag, char *myname) {
   char line[512];
   int s;
 
-  while (1) {
+  while(1) {
     s = fscanf(fp, "%s", checktag);
     if (s == EOF) {
       printf("%s(%d): EOF on input\n", myname, this_node);
@@ -463,7 +484,8 @@ int get_vi(FILE* fp, int prompt, char *tag, int *value, int nvalues) {
     }
   }
   else {
-    if (get_tag(fp, tag, myname) == 1) return 1;
+    if (get_tag(fp, tag, myname) == 1)
+      return 1;
 
     for (i = 0; i < nvalues - 1; i++) {
       s = fscanf(fp, "%d", value + i);
@@ -471,7 +493,8 @@ int get_vi(FILE* fp, int prompt, char *tag, int *value, int nvalues) {
       printf("%d ", value[i]);
     }
     s = fscanf(fp, "%d", value + nvalues - 1);
-    if (check_read(s, myname, tag) == 1) return 1;
+    if (check_read(s, myname, tag) == 1)
+      return 1;
     printf("%d\n", value[nvalues - 1]);
   }
   return 0;

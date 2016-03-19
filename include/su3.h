@@ -11,10 +11,14 @@
 
 // -----------------------------------------------------------------
 // Gauge group is SU(NCOL)
-// Assume only fundamental fermions with NCOL = NCOL
-#define NCOL 2
+// Assume only fundamental fermions with DIMF = NCOL
+#define NCOL 7
 
 #if (NCOL != 3)
+// Unitarity checking and reunitarization currently
+// only implemented for SU(3)
+#define NO_UNIT_CHECK
+
 #ifdef FAST
   #error "FAST only works if NCOL=3!"
 #endif

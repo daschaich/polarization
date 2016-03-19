@@ -9,7 +9,7 @@ void plaquette(double *ss_plaq, double *st_plaq) {
   register su3_matrix *m1, *m4;
   double ss_sum = 0.0, st_sum = 0.0;
   msg_tag *mtag0, *mtag1;
-  su3_matrix tmat
+  su3_matrix tmat;
 
   // We can exploit a symmetry under dir<-->dir2
   for (dir = YUP; dir <= TUP; dir++) {

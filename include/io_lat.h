@@ -184,4 +184,5 @@ gauge_file *r_serial_i(char *filename);
 void w_serial_f(gauge_file *gf);
 void r_serial_f(gauge_file *gf);
 void byterevn(int32type w[], int n);
+#endif
 // -----------------------------------------------------------------

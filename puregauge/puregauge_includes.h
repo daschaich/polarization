@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <string.h>             // For print_var.c, setup.c, gauge_info.c
+#include <string.h>             // For setup.c and gauge_info.c
 #include "../include/complex.h"
 #include "../include/su3.h"
 #include "../include/macros.h"
@@ -22,15 +22,7 @@
 // Prototypes for functions in high level code
 int setup();
 int readin(int prompt);
-// -----------------------------------------------------------------
 
-
-
-// -----------------------------------------------------------------
-// Basic observables
-void plaquette(double *ss_plaq, double *st_plaq);
-
-// Other routines in library_util.c that loop over all sites
-void gauge_field_copy_f(field_offset src, field_offset dest);
-void shiftmat(su3_matrix_f *dat, su3_matrix_f *temp, int dir);
+// Might be useful to have in the future
+//void shiftmat(su3_matrix *dat, su3_matrix *temp, int dir);
 // -----------------------------------------------------------------

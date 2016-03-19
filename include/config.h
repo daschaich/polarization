@@ -26,7 +26,7 @@
 //#define HAVE_IEEEFP_H 1
 
 // Define if unistd.h exists
-// Most systems have this (exception: NT)
+// Most systems have this
 #define HAVE_UNISTD_H 1
 
 // Define if <sys/time.h> exists
@@ -34,7 +34,7 @@
 #define HAVE_SYS_TIME_H 1
 
 // Define if ANSI "fseeko" present
-// Most systems have this (exceptions: T3E UNICOS)
+// Most systems have this
 #define HAVE_FSEEKO 1
 
 #endif

@@ -2,7 +2,7 @@
 // Check unitarity of the link matrices, terminate if not unitary
 #include "generic_includes.h"
 
-#define TOLERANCE (0.0001)
+#define TOLERANCE 0.0001
 #define STRONG    // Check row orthogonality as well as norms
 /*#define UNIDEBUG */
 // -----------------------------------------------------------------
@@ -102,17 +102,13 @@ Real check_unitarity() {
     int ival;
   } ifval;
 
-#if (NCOL != 3)
-#error "Unitarity checking only implemented for NCOL=3!"
-#endif
-
   FORALLSITES(i, s) {
     for (dir = XUP; dir <= TUP; dir++ ){
       mat = (su3_matrix *)&(s->link[dir]);
       deviation = check_su3(mat);
       if (deviation > TOLERANCE) {
         printf("Unitarity problem on node %d, site %d, dir %d, deviation=%f\n",
-            mynode(), i, dir, deviation);
+               mynode(), i, dir, deviation);
         printf("SU3 matrix:\n");
         for (ii = 0; ii < NCOL; ii++) {
           for (jj = 0; jj < NCOL; jj++) {
@@ -155,12 +151,12 @@ Real check_unitarity() {
 
   av_deviation = sqrt(av_deviation / (4.0 * i));
 #ifdef UNIDEBUG
-  printf("Deviation from unitarity on node %d: max %g, avrg %g\n",
-      mynode(), max_deviation, av_deviation);
+  printf("Deviation from unitarity on node %d: max %g, ave %g\n",
+         mynode(), max_deviation, av_deviation);
 #endif
   if (max_deviation > TOLERANCE)
     printf("Unitarity problem on node %d, maximum deviation=%f\n",
-        mynode(),max_deviation);
+           mynode(), max_deviation);
   return max_deviation;
 }
 // -----------------------------------------------------------------
