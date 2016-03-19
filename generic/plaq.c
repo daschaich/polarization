@@ -51,7 +51,5 @@ void plaquette(double *ss_plaq, double *st_plaq) {
   // and three that do not
   *ss_plaq = ss_sum / ((double)(3.0 * volume));
   *st_plaq = st_sum / ((double)(3.0 * volume));
-
-  free(tempmat);
 }
 // -----------------------------------------------------------------

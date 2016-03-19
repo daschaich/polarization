@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
   // Check plaquette
   plaquette(&ss_plaq, &st_plaq);
   td = 0.5 * (ss_plaq + st_plaq);
-  node0_printf("START %.8g %.8g %.8g ", ss_plaq, st_plaq, td);
+  node0_printf("START %.8g %.8g %.8g\n", ss_plaq, st_plaq, td);
 
   // Compute field strength tensor at each site
   make_field_strength(F_OFFSET(link), F_OFFSET(FS));
