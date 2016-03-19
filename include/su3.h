@@ -12,7 +12,7 @@
 // -----------------------------------------------------------------
 // Gauge group is SU(NCOL)
 // Assume only fundamental fermions with DIMF = NCOL
-#define NCOL 7
+#define NCOL 3
 
 #if (NCOL != 3)
 // Unitarity checking and reunitarization currently
